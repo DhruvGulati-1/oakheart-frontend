@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oakheart – MoodBot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+      color: #1f2937;
+    }
+    header {
+      background: linear-gradient(135deg, #2563eb, #10b981);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+      font-weight: 700;
+    }
+    header p {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      opacity: 0.95;
+    }
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+    }
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      color: #111827;
+    }
+    .avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 20px auto;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .avatar:hover {
+      transform: scale(1.05);
+    }
+    .slider {
+      width: 100%;
+    }
+    .messages {
+      height: 200px;
+      overflow-y: auto;
+      border: 1px solid #e5e7eb;
+      padding: 12px;
+      background: #f3f4f6;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+    .user { text-align: right; color: #111; margin: 6px; }
+    .bot { text-align: left; color: #2563eb; margin: 6px; }
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      margin-top: 8px;
+      font-size: 0.95rem;
+    }
+    button {
+      background: linear-gradient(135deg, #2563eb, #10b981);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #1e40af, #059669);
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: #6b7280;
+      background: #f3f4f6;
+      margin-top: 30px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌳 Oakheart</h1>
+    <p>Where Hidden Wounds Are Seen – AI-powered MoodBot for Mental Wellness</p>
+  </header>
+
+  <div class="container">
+    <!-- MoodBot Card -->
+    <div class="card">
+      <h2>🧠 MoodBot Status</h2>
+      <div id="avatar" class="avatar" style="background: #10b981;">Calm 😊</div>
+      <label for="stressSlider"><strong>Stress Level (Simulated Sensor):</strong></label>
+      <input type="range" id="stressSlider" class="slider" min="0" max="1" step="0.01" value="0.2">
+    </div>
+
+    <!-- Chatbot Card -->
+    <div class="card">
+      <h2>💬 MoodBot Chat</h2>
+      <div id="messages" class="messages">
+        <div class="bot"><strong>Bot:</strong> Hi, I’m Oakheart MoodBot 🌱 How are you feeling today?</div>
+      </div>
+      <input type="text" id="chatInput" placeholder="Type a message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <!-- Journal Card -->
+    <div class="card" style="grid-column: span 2;">
+      <h2>📓 Journal</h2>
+      <textarea id="journal" placeholder="Write how you feel today..."></textarea>
+      <button onclick="saveJournal()">Save Entry</button>
+      <p id="journalStatus"></p>
+    </div>
+  </div>
+
+  <footer>
+    <p>Made with ❤️ by Team Oakheart | SIH 2025 Prototype</p>
+  </footer>
+
+  <script>
+    const avatar = document.getElementById("avatar");
+    const stressSlider = document.getElementById("stressSlider");
+
+    stressSlider.addEventListener("input", () => {
+      const stress = parseFloat(stressSlider.value);
+      if (stress < 0.33) {
+        avatar.style.background = "#10b981"; // green
+        avatar.textContent = "Calm 😊";
+      } else if (stress < 0.66) {
+        avatar.style.background = "#f59e0b"; // amber
+        avatar.textContent = "Neutral 😐";
+      } else {
+        avatar.style.background = "#ef4444"; // red
+        avatar.textContent = "Stressed 😟";
+      }
+    });
+
+    function sendMessage() {
+      const input = document.getElementById("chatInput");
+      const messages = document.getElementById("messages");
+      if (!input.value.trim()) return;
+
+      messages.innerHTML += `<div class='user'><strong>You:</strong> ${input.value}</div>`;
+
+      let reply = "I’m here to listen.";
+      const msg = input.value.toLowerCase();
+      if (msg.includes("stress")) reply = "I noticed that too — try a short breathing exercise?";
+      if (msg.includes("happy")) reply = "That’s wonderful! Keep it up 🌟";
+      if (msg.includes("sad")) reply = "I’m sorry you feel that way — want me to suggest a relaxation tip?";
+
+      messages.innerHTML += `<div class='bot'><strong>Bot:</strong> ${reply}</div>`;
+      input.value = "";
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function saveJournal() {
+      const journalText = document.getElementById("journal").value;
+      if (!journalText.trim()) {
+        document.getElementById("journalStatus").textContent = "⚠️ Please write something before saving.";
+        return;
+      }
+      document.getElementById("journalStatus").textContent = "✅ Journal entry saved (local only).";
+      document.getElementById("journal").value = "";
+    }
+  </script>
+</body>
+</html>
