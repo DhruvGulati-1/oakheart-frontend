@@ -59,7 +59,7 @@ button:hover { background:#ffaa00; }
 </main>
 
 <script>
-const BACKEND_URL="https://your-render-backend.onrender.com"; // Replace with Render URL
+const BACKEND_URL="YOUR_RENDER_BACKEND_URL_HERE"; // Replace with your Render backend URL
 
 // -------- AI Chatbot --------
 async function sendMessage(){
@@ -112,20 +112,48 @@ badges.forEach(b=>{badgesDiv.innerHTML+=`<span class="badge">${b}</span>`;});
 async function saveJournal(){
 const text=document.getElementById("journal").value;
 if(!text.trim())return;
-try{const res=await fetch(`${BACKEND_URL}/api/journal`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});const data=await res.json();document.getElementById("journalStatus").textContent="✅ "+data.message;document.getElementById("journal").value="";}catch(err){document.getElementById("journalStatus").textContent="❌ Failed.";}
+try{
+const res=await fetch(`${BACKEND_URL}/api/journal`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});
+const data=await res.json();
+document.getElementById("journalStatus").textContent="✅ "+data.message;
+document.getElementById("journal").value="";
+}catch(err){document.getElementById("journalStatus").textContent="❌ Failed.";}
 }
+
 async function fetchEntries(){
-try{const res=await fetch(`${BACKEND_URL}/api/journal`);const data=await res.json();const entriesDiv=document.getElementById("entries");entriesDiv.innerHTML="";if(data.length===0)entriesDiv.innerHTML="<p>No entries yet.</p>";data.forEach(entry=>{entriesDiv.innerHTML+=`<div class="journal-entry">${new Date(entry.date).toLocaleString()} - ${entry.text}</div>`;});}catch(err){document.getElementById("entries").innerHTML="❌ Failed to load entries.";}
+try{
+const res=await fetch(`${BACKEND_URL}/api/journal`);
+const data=await res.json();
+const entriesDiv=document.getElementById("entries");
+entriesDiv.innerHTML="";
+if(data.length===0)entriesDiv.innerHTML="<p>No entries yet.</p>";
+data.forEach(entry=>{
+entriesDiv.innerHTML+=`<div class="journal-entry">${new Date(entry.date).toLocaleString()} - ${entry.text}</div>`;
+});
+}catch(err){document.getElementById("entries").innerHTML="❌ Failed to load entries.";}
 }
 
 // -------- Community --------
 async function postCommunity(){
 const text=document.getElementById("communityPost").value;
 if(!text.trim())return;
-try{await fetch(`${BACKEND_URL}/api/community`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});document.getElementById("communityPost").value="";fetchCommunity();}catch(err){alert("❌ Failed to post.");}
+try{
+await fetch(`${BACKEND_URL}/api/community`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});
+document.getElementById("communityPost").value="";
+fetchCommunity();
+}catch(err){alert("❌ Failed to post.");}
 }
+
 async function fetchCommunity(){
-try{const res=await fetch(`${BACKEND_URL}/api/community`);const posts=await res.json();const feedDiv=document.getElementById("communityFeed");feedDiv.innerHTML="";posts.forEach(p=>{feedDiv.innerHTML+=`<div class="community-entry">${new Date(p.date).toLocaleString()} - ${p.text}</div>`;});}catch(err){document.getElementById("communityFeed").innerHTML="❌ Failed to load posts.";}
+try{
+const res=await fetch(`${BACKEND_URL}/api/community`);
+const posts=await res.json();
+const feedDiv=document.getElementById("communityFeed");
+feedDiv.innerHTML="";
+posts.forEach(p=>{
+feedDiv.innerHTML+=`<div class="community-entry">${new Date(p.date).toLocaleString()} - ${p.text}</div>`;
+});
+}catch(err){document.getElementById("communityFeed").innerHTML="❌ Failed to load posts.";}
 }
 
 // Initialize
@@ -134,3 +162,4 @@ fetchCommunity();
 </script>
 </body>
 </html>
+
