@@ -5,81 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Oakheart – SIH 2025 Prototype</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-      color: white;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-    header {
-      background: rgba(0,0,0,0.4);
-      padding: 20px;
-      font-size: 2rem;
-      font-weight: bold;
-    }
-    .prototype-banner {
-      background: rgba(0,0,0,0.3);
-      padding: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-    }
-    main {
-      padding: 20px;
-    }
-    section {
-      background: rgba(255,255,255,0.1);
-      border-radius: 10px;
-      margin: 20px auto;
-      padding: 20px;
-      width: 90%;
-      max-width: 700px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-    textarea, input, select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      margin: 10px 0;
-    }
-    button {
-      background: #ffcc00;
-      color: black;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 5px;
-    }
+    body { font-family: Arial; background: linear-gradient(to right, #6a11cb, #2575fc); color: white; margin: 0; text-align: center; }
+    header { background: rgba(0,0,0,0.4); padding: 20px; font-size: 2rem; font-weight: bold; }
+    .prototype-banner { background: rgba(0,0,0,0.3); padding: 10px; font-size: 1rem; font-weight: 600; }
+    main { padding: 20px; }
+    section { background: rgba(255,255,255,0.1); border-radius: 10px; margin: 20px auto; padding: 20px; width: 90%; max-width: 700px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+    textarea, input, select { width: 100%; padding: 10px; border-radius: 8px; border: none; margin: 10px 0; }
+    button { background: #ffcc00; color: black; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 5px; }
     button:hover { background: #ffaa00; }
-    #chatbox {
-      background: white;
-      color: black;
-      padding: 10px;
-      border-radius: 8px;
-      height: 150px;
-      overflow-y: auto;
-      margin-bottom: 10px;
-    }
-    .journal-entry, .community-entry {
-      background: rgba(0,0,0,0.2);
-      padding: 8px;
-      margin: 5px 0;
-      border-radius: 6px;
-      text-align: left;
-    }
-    .badge {
-      display: inline-block;
-      background: #ffcc00;
-      color: black;
-      padding: 5px 10px;
-      margin: 3px;
-      border-radius: 6px;
-      font-weight: bold;
-    }
+    #chatbox { background: white; color: black; padding: 10px; border-radius: 8px; height: 200px; overflow-y: auto; text-align:left; }
+    .journal-entry, .community-entry { background: rgba(0,0,0,0.2); padding: 8px; margin: 5px 0; border-radius: 6px; text-align: left; }
+    .badge { display: inline-block; background: #ffcc00; color: black; padding: 5px 10px; margin: 3px; border-radius: 6px; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -87,15 +23,15 @@
   <div class="prototype-banner">🚀 SIH 2025 Prototype – Hidden Wounds Are Seen</div>
 
   <main>
-    <!-- MoodBot / Chat -->
+    <!-- AI MoodBot -->
     <section>
-      <h2>🤖 MoodBot</h2>
-      <div id="chatbox">Hello! I’m your MoodBot. How are you feeling today?</div>
+      <h2>🤖 AI MoodBot</h2>
+      <div id="chatbox">Hello! I’m your AI MoodBot. How are you feeling today?</div>
       <input type="text" id="userInput" placeholder="Type your message..." />
       <button onclick="sendMessage()">Send</button>
     </section>
 
-    <!-- Mood & Health Tracking -->
+    <!-- Health Tracker -->
     <section>
       <h2>📊 Health Tracker</h2>
       <label>Mood:</label>
@@ -106,13 +42,10 @@
         <option value="Stressed">Stressed</option>
         <option value="Anxious">Anxious</option>
       </select>
-
       <label>Sleep Hours:</label>
       <input type="number" id="sleep" placeholder="Hours of sleep last night" min="0" max="24" />
-
       <label>Physical Activity (minutes):</label>
       <input type="number" id="activity" placeholder="Minutes of exercise" min="0" max="300" />
-
       <button onclick="saveHealthData()">Save Health Data</button>
       <p id="healthStatus"></p>
     </section>
@@ -146,132 +79,150 @@
       <div id="streakDisplay">Current Streak: 0 days</div>
       <div id="badgesDisplay"></div>
     </section>
-
   </main>
 
-  <script>
-    const BACKEND_URL = "http://localhost:5000"; // Replace with Render URL when deployed
+<script>
+const BACKEND_URL = "http://localhost:5000"; // Replace with your Render backend URL
 
-    // MoodBot
-    function sendMessage() {
-      const input = document.getElementById("userInput").value;
-      if (!input.trim()) return;
-      const chatbox = document.getElementById("chatbox");
-      chatbox.innerHTML += `<div><b>You:</b> ${input}</div>`;
+// -------- AI MoodBot --------
+async function sendMessage() {
+  const input = document.getElementById("userInput").value;
+  if (!input.trim()) return;
+  const chatbox = document.getElementById("chatbox");
+  chatbox.innerHTML += `<div><b>You:</b> ${input}</div>`;
+  chatbox.scrollTop = chatbox.scrollHeight;
+  document.getElementById("userInput").value = "";
 
-      let botReply = "I’m here to listen. Tell me more.";
-      if (input.toLowerCase().includes("sad")) botReply = "I’m sorry you feel sad 💙. Remember, you are not alone.";
-      if (input.toLowerCase().includes("happy")) botReply = "That’s wonderful! 😃 Keep it up!";
-      if (input.toLowerCase().includes("stressed")) botReply = "Take a deep breath 🌿. Try journaling.";
+  try {
+    const response = await fetch(`${BACKEND_URL}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: input })
+    });
+    const data = await response.json();
+    const reply = data.reply || "Sorry, I couldn't understand that.";
+    chatbox.innerHTML += `<div><b>MoodBot:</b> ${reply}</div>`;
+    chatbox.scrollTop = chatbox.scrollHeight;
+  } catch (error) {
+    chatbox.innerHTML += `<div><b>MoodBot:</b> ❌ Failed to get response.</div>`;
+  }
+}
 
-      chatbox.innerHTML += `<div><b>MoodBot:</b> ${botReply}</div>`;
-      document.getElementById("userInput").value = "";
-      chatbox.scrollTop = chatbox.scrollHeight;
-    }
+// -------- Health Data --------
+async function saveHealthData() {
+  const mood = document.getElementById("mood").value;
+  const sleep = document.getElementById("sleep").value;
+  const activity = document.getElementById("activity").value;
 
-    // Health Data
-    async function saveHealthData() {
-      const mood = document.getElementById("mood").value;
-      const sleep = document.getElementById("sleep").value;
-      const activity = document.getElementById("activity").value;
+  if (!mood || !sleep || !activity) {
+    document.getElementById("healthStatus").textContent = "⚠️ Please fill all fields.";
+    return;
+  }
 
-      if (!mood || !sleep || !activity) {
-        document.getElementById("healthStatus").textContent = "⚠️ Please fill all fields.";
-        return;
-      }
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/health`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mood, sleep, activity })
+    });
+    const data = await res.json();
 
-      try {
-        // Save locally for prototype streaks/badges
-        let streak = parseInt(localStorage.getItem("streak") || "0");
-        streak++;
-        localStorage.setItem("streak", streak);
+    let streak = parseInt(localStorage.getItem("streak") || "0") + 1;
+    localStorage.setItem("streak", streak);
 
-        // Save badges
-        let badges = JSON.parse(localStorage.getItem("badges") || "[]");
-        if (streak % 3 === 0 && !badges.includes("Consistency")) badges.push("Consistency");
-        if (parseInt(sleep) >= 7 && !badges.includes("Healthy Sleep")) badges.push("Healthy Sleep");
-        if (parseInt(activity) >= 30 && !badges.includes("Active")) badges.push("Active");
-        localStorage.setItem("badges", JSON.stringify(badges));
+    let badges = JSON.parse(localStorage.getItem("badges") || "[]");
+    if (streak % 3 === 0 && !badges.includes("Consistency")) badges.push("Consistency");
+    if (parseInt(sleep) >= 7 && !badges.includes("Healthy Sleep")) badges.push("Healthy Sleep");
+    if (parseInt(activity) >= 30 && !badges.includes("Active")) badges.push("Active");
+    localStorage.setItem("badges", JSON.stringify(badges));
 
-        updateStreakAndBadges();
-
-        document.getElementById("healthStatus").textContent = "✅ Health data saved!";
-        document.getElementById("mood").value = "";
-        document.getElementById("sleep").value = "";
-        document.getElementById("activity").value = "";
-      } catch (error) {
-        document.getElementById("healthStatus").textContent = "❌ Failed to save health data.";
-      }
-    }
-
-    function updateStreakAndBadges() {
-      document.getElementById("streakDisplay").textContent = `Current Streak: ${localStorage.getItem("streak") || 0} days`;
-      const badges = JSON.parse(localStorage.getItem("badges") || "[]");
-      const badgesDiv = document.getElementById("badgesDisplay");
-      badgesDiv.innerHTML = "";
-      badges.forEach(b => {
-        badgesDiv.innerHTML += `<span class="badge">${b}</span>`;
-      });
-    }
-
-    // Journal
-    async function saveJournal() {
-      const journalText = document.getElementById("journal").value;
-      if (!journalText.trim()) return;
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/journal`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: journalText })
-        });
-        const data = await res.json();
-        document.getElementById("journalStatus").textContent = "✅ " + data.message;
-        document.getElementById("journal").value = "";
-      } catch (error) {
-        document.getElementById("journalStatus").textContent = "❌ Failed to save entry.";
-      }
-    }
-
-    async function fetchEntries() {
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/journal`);
-        const data = await res.json();
-        const entriesDiv = document.getElementById("entries");
-        entriesDiv.innerHTML = "";
-        if (data.length === 0) entriesDiv.innerHTML = "<p>No entries yet.</p>";
-        data.forEach(entry => {
-          entriesDiv.innerHTML += `<div class="journal-entry">${new Date(entry.date).toLocaleString()} - ${entry.text}</div>`;
-        });
-      } catch (error) {
-        document.getElementById("entries").innerHTML = "❌ Failed to load entries.";
-      }
-    }
-
-    // Community Feed (prototype using localStorage)
-    function postCommunity() {
-      const text = document.getElementById("communityPost").value;
-      if (!text.trim()) return;
-      let posts = JSON.parse(localStorage.getItem("community") || "[]");
-      posts.unshift({ text, date: new Date().toISOString() });
-      localStorage.setItem("community", JSON.stringify(posts));
-      document.getElementById("communityPost").value = "";
-      renderCommunity();
-    }
-
-    function renderCommunity() {
-      const postsDiv = document.getElementById("communityFeed");
-      const posts = JSON.parse(localStorage.getItem("community") || "[]");
-      postsDiv.innerHTML = "";
-      posts.forEach(p => {
-        postsDiv.innerHTML += `<div class="community-entry">${new Date(p.date).toLocaleString()} - ${p.text}</div>`;
-      });
-    }
-
-    // Initialize streaks, badges, community feed
     updateStreakAndBadges();
-    renderCommunity();
-  </script>
+    document.getElementById("healthStatus").textContent = "✅ Health data saved!";
+    document.getElementById("mood").value = "";
+    document.getElementById("sleep").value = "";
+    document.getElementById("activity").value = "";
+  } catch (error) {
+    document.getElementById("healthStatus").textContent = "❌ Failed to save health data.";
+  }
+}
+
+function updateStreakAndBadges() {
+  document.getElementById("streakDisplay").textContent = `Current Streak: ${localStorage.getItem("streak") || 0} days`;
+  const badges = JSON.parse(localStorage.getItem("badges") || "[]");
+  const badgesDiv = document.getElementById("badgesDisplay");
+  badgesDiv.innerHTML = "";
+  badges.forEach(b => {
+    badgesDiv.innerHTML += `<span class="badge">${b}</span>`;
+  });
+}
+
+// -------- Journal --------
+async function saveJournal() {
+  const journalText = document.getElementById("journal").value;
+  if (!journalText.trim()) return;
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/journal`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: journalText })
+    });
+    const data = await res.json();
+    document.getElementById("journalStatus").textContent = "✅ " + data.message;
+    document.getElementById("journal").value = "";
+  } catch (error) {
+    document.getElementById("journalStatus").textContent = "❌ Failed to save entry.";
+  }
+}
+
+async function fetchEntries() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/journal`);
+    const data = await res.json();
+    const entriesDiv = document.getElementById("entries");
+    entriesDiv.innerHTML = "";
+    if (data.length === 0) entriesDiv.innerHTML = "<p>No entries yet.</p>";
+    data.forEach(entry => {
+      entriesDiv.innerHTML += `<div class="journal-entry">${new Date(entry.date).toLocaleString()} - ${entry.text}</div>`;
+    });
+  } catch (error) {
+    document.getElementById("entries").innerHTML = "❌ Failed to load entries.";
+  }
+}
+
+// -------- Community --------
+async function postCommunity() {
+  const text = document.getElementById("communityPost").value;
+  if (!text.trim()) return;
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/community`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+    document.getElementById("communityPost").value = "";
+    fetchCommunity();
+  } catch (error) {
+    alert("❌ Failed to post to community.");
+  }
+}
+
+async function fetchCommunity() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/community`);
+    const posts = await res.json();
+    const feedDiv = document.getElementById("communityFeed");
+    feedDiv.innerHTML = "";
+    posts.forEach(p => {
+      feedDiv.innerHTML += `<div class="community-entry">${new Date(p.date).toLocaleString()} - ${p.text}</div>`;
+    });
+  } catch (error) {
+    document.getElementById("communityFeed").innerHTML = "❌ Failed to load posts.";
+  }
+}
+
+// Initialize
+updateStreakAndBadges();
+fetchCommunity();
+</script>
 </body>
 </html>
-
